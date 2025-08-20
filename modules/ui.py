@@ -225,7 +225,6 @@ class UIManager:
 
     def display_main_menu(self):
         print('\n' + '='*30)
-        # Usamos self._language para buscar o texto correto
         print(self.__translations[self._language]['select_feature'])
         print(self.__translations[self._language]['weather_forecast'])
         print(self.__translations[self._language]['current_weather_data'])
@@ -237,10 +236,34 @@ class UIManager:
         print(self.__translations[self._language]['close_menu'])
         print('='*30)
 
-    def get_user_input(self, prompt_key):
-        prompt_text = self.__translations[self._language].get(prompt_key, f"Chave '{prompt_key}' não encontrada.")
+    def get_language(self):
+        return self._language
+
+    def get_text(self, key, **kwargs):
+        text_template = self.__translations[self._language].get(key, f"Chave '{key}' não encontrada.")
+        try:
+            return text_template.format(**kwargs)
+        except KeyError as e:
+            return f"Erro de formatação: placeholder {e} faltando nos argumentos."
+
+    def get_user_input(self, prompt_key, **kwargs):
+        prompt_text = self.get_text(prompt_key, **kwargs)
         return input(prompt_text)
 
-    def display_message(self, message_key):
-        message_text = self.__translations[self._language].get(message_key, f"Chave '{message_key}' não encontrada.")
+    def display_message(self, message_key, **kwargs):
+        message_text = self.get_text(message_key, **kwargs)
         print(message_text)
+
+    def display_forecast(self, city_name, forecast_days):
+        self.display_message('text_city', period=len(forecast_days), city=city_name.title())
+
+        for i, day in enumerate(forecast_days, 1):
+            print('\n' + '='*30)
+            print(f"{self.get_text('day')} {i}:")
+            print(f"{self.get_text('day')}: {day.date}")
+            print(f"{self.get_text('max_temp')}: {day.max_temp_c}°")
+            print(f"{self.get_text('min_temp')}: {day.min_temp_c}°")
+            print(f"{self.get_text('conditions')}: {day.condition}")
+            print(f"{self.get_text('sunrise')}: {day.sunrise}")
+            print(f"{self.get_text('sunset')}: {day.sunset}")
+            print('='*30)
