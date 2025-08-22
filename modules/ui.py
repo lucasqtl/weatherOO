@@ -1,3 +1,5 @@
+from .models import CurrentWeather
+
 class UIManager:
     __translations = {
     'pt': {
@@ -267,3 +269,23 @@ class UIManager:
             print(f"{self.get_text('sunrise')}: {day.sunrise}")
             print(f"{self.get_text('sunset')}: {day.sunset}")
             print('='*30)
+
+    def display_current_weather(self, weather: CurrentWeather):
+        print('\n' + '='*30)
+        self.display_message('weather_in_city', city=weather.city.title())
+        print(f"{self.get_text('temp_c')}: {weather.temp_c}°")
+        print(f"{self.get_text('conditions')}: {weather.condition}")
+        print(f"{self.get_text('humidity')}: {weather.humidity}%")
+        print(f"{self.get_text('wind_speed')}: {weather.wind_kph}km/h")
+        print(f"{self.get_text('precipitation')}: {weather.precip_mm}mm")
+        print('='*30)
+
+    def display_historical_weather(self, weather: CurrentWeather):
+        print('\n' + '='*30)
+        self.display_message('historical_weather', city=weather.city.title())
+        print(f"{self.get_text('conditions')}: {weather.temp_c}°")
+        print(f"{self.get_text('conditions')}: {weather.condition}")
+        print(f"{self.get_text('humidity')}: {weather.humidity}%")
+        print(f"{self.get_text('wind_speed')}: {weather.wind_kph}km/h")
+        print(f"{self.get_text('precipitation')}: {weather.precip_mm}mm")
+        print('='*30)

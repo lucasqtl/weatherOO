@@ -1,5 +1,6 @@
 class CurrentWeather:
-    def __init__(self, temp_c, humidity, wind_kph, precip_mm, condition_text):
+    def __init__(self, city, temp_c, humidity, wind_kph, precip_mm, condition_text):
+        self.city = city
         self.temp_c = temp_c
         self.humidity = humidity
         self.wind_kph = wind_kph
@@ -9,7 +10,9 @@ class CurrentWeather:
     @classmethod
     def from_dict(cls, data):
         current_data = data.get('current', {})
+        location_data = data.get('location', {})
         return cls(
+            city=location_data.get('name'),
             temp_c=current_data.get('temp_c'),
             humidity=current_data.get('humidity'),
             wind_kph=current_data.get('wind_kph'),

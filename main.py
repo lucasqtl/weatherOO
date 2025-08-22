@@ -1,61 +1,43 @@
-from traducao import translations, display_menu
-from modules.weather_display import previsao, tempo, alertas, history, feedback, report
+from modules.ui import UIManager
+from modules.services import ApiService
+from modules.features import Forecast, Current
 
-
-language = "pt" 
-
-# a main é o menu de seleção e chama as funções de acordo com a opção selecionada
-if __name__ == '__main__':
-    print('\n' + '='*30)
-    print('Português: pt')
-    print('Inglês: en')
-    print('Espanhol: es')
-    language = input('Escolha um Idioma: ').lower()
-    print('='*30)
-
-    if language not in translations:
-        print("Idioma inválido. Usando Português (pt) por padrão.")
-        language = 'pt'
-
-
-    while True:
-        display_menu(language)
+class WeatherApp:
+    def __init__(self):
+        self.ui = UIManager() 
+        self.api = ApiService()
         
-        try:
-            op = int(input(translations[language]['choose_option']))
+       
+        self.features = {
+            "1": Forecast(self.api, self.ui),
+            "2": Current(self.api, self.ui),
+            #"3": History(self.api, self.ui),
+            #"4": Feedback(self.api, self.ui),
+            #"4": Report(self.api, self.ui),
+            #"6": Alert(self.api, self.ui),
+        }
+    
+    def run(self):
+        while True:
+            self.ui.display_main_menu()
+            option = self.ui.get_user_input('choose_option')
 
-            if op == 0:
+            if option == '0':
                 break
-            elif op == 1:
-                previsao(language)
+            
+            if option == '7':
+                new_lang = input('Escolha um Idioma (pt, en, es): ').lower() # fazer um chave pra esse texto
+                if not self.ui.set_language(new_lang):
+                    self.ui.display_message('invalid_input')
+                continue 
 
-            elif op == 2:
-                tempo(language)
-                
-            elif op == 3:
-                history(language)
+            feature_to_run = self.features.get(option)
 
-            elif op == 4:
-                feedback(language)
-                
-            elif op == 5:
-                report(language)
-
-            elif op == 6:
-                alertas(language)
-
-            elif op == 7:
-                print('\n' + '='*30)
-                print('Português: pt')
-                print('Inglês: en')
-                print('Espanhol: es')
-                new_language = input('Escolha um Idioma: ').lower()
-                print('='*30)
-                if new_language in translations:
-                    language = new_language
-                else:
-                    print(f"Idioma '{new_language}' não suportado. Mantendo o idioma atual.")
+            if feature_to_run:
+                feature_to_run.execute()
             else:
-                print("Opção inválida. Por favor, tente novamente.")
-        except ValueError:
-            print("Entrada inválida. Por favor, digite um número.")
+                self.ui.display_message('invalid_input')
+
+if __name__ == '__main__':
+    app = WeatherApp()
+    app.run()
