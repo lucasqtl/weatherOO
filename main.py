@@ -1,20 +1,21 @@
 from modules.ui import UIManager
 from modules.services import ApiService
-from modules.features import Forecast, Current
+from modules.features import Forecast, Current, History, Feedback, Alert, Report
 
 class WeatherApp:
     def __init__(self):
         self.ui = UIManager() 
         self.api = ApiService()
+        self.feedbacks_list = []
         
        
         self.features = {
             "1": Forecast(self.api, self.ui),
             "2": Current(self.api, self.ui),
-            #"3": History(self.api, self.ui),
-            #"4": Feedback(self.api, self.ui),
-            #"4": Report(self.api, self.ui),
-            #"6": Alert(self.api, self.ui),
+            "3": History(self.api, self.ui),
+            "4": Feedback(self.api, self.ui, self.feedbacks_list),
+            "5": Report(self.api, self.ui),
+            "6": Alert(self.api, self.ui),
         }
     
     def run(self):

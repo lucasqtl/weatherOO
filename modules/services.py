@@ -1,7 +1,7 @@
 import requests
 
 class ApiService:
-    __API_KEY = "bf4317a7655c458097b131701250108"
+    __API_KEY = "46e2a1ff21874cb1868141546252408"
     __URL = "http://api.weatherapi.com/v1"
 
     def get_weather_data(self, query, forecast_days=1, lang="pt"):

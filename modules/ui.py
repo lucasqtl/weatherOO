@@ -1,4 +1,4 @@
-from .models import CurrentWeather
+from .models import CurrentWeather, HistoricalDay, WeatherReport
 
 class UIManager:
     __translations = {
@@ -16,13 +16,14 @@ class UIManager:
         'enter_city': 'Digite a sua cidade: ',
         'enter_period': 'Digite o período de previsão (1, 3 ou 7 dias): ',
         'invalid_period': 'Período inválido. Por favor, escolha entre 1, 3 ou 7 dias.',
-        'text_city': 'Previsão para os próximos {period} dias em',
+        'text_city': 'Previsão para os próximos {period} dias em {city}',
         'day': 'Dia',
         'max_temp': 'Temperatura máxima',
         'min_temp': 'Temperatura mínima',
         'conditions': 'Condições',
         'sunrise': 'Nascer do Sol',
         'sunset': 'Pôr do Sol',
+        'temperature': 'Temperatura',
         'my_location': '1 - Consultar clima da localização atual',
         'another_location': '2 - Consultar clima de uma cidade específica',
         'consult_another_city': 'Digite "c" para consultar outra cidade ou "m" para voltar ao menu: ',
@@ -85,13 +86,14 @@ class UIManager:
         'enter_city': 'Enter your city: ',
         'enter_period': 'Enter the forecast period (1, 3, or 7 days): ',
         'invalid_period': 'Invalid period. Please choose between 1, 3, or 7 days.',
-        'text_city': 'Forecast for the next {period} days in',
+        'text_city': 'Forecast for the next {period} days in {city}',
         'day': 'Day',
         'max_temp': 'Maximum Temperature',
         'min_temp': 'Minimum Temperature',
         'conditions': 'Conditions',
         'sunrise': 'Sunrise',
         'sunset': 'Sunset',
+        'temperature': 'Temperature',
         'my_location': '1 - Check weather for current location',
         'another_location': '2 - Check weather for a specific city',
         'consult_another_city': 'Type "c" to consult another city or "m" to return to the menu: ',
@@ -154,13 +156,14 @@ class UIManager:
         'enter_city': 'Ingrese su ciudad: ',
         'enter_period': 'Ingrese el período de pronóstico (1, 3 o 7 días): ',
         'invalid_period': 'Período inválido. Por favor, elija entre 1, 3 o 7 días.',
-        'text_city': 'Pronóstico para los próximos {period} días en',
+        'text_city': 'Pronóstico para los próximos {period} días en {city}',
         'day': 'Día',
         'max_temp': 'Temperatura máxima',
         'min_temp': 'Temperatura mínima',
         'conditions': 'Condiciones',
         'sunrise': 'Amanecer',
         'sunset': 'Atardecer',
+        'temperature': 'Temperatura',
         'my_location': '1 - Consultar clima de la ubicación actual',
         'another_location': '2 - Consultar clima de una ciudad específica',
         'consult_another_city': 'Escriba "c" para consultar otra ciudad o "m" para volver al menú: ',
@@ -273,19 +276,58 @@ class UIManager:
     def display_current_weather(self, weather: CurrentWeather):
         print('\n' + '='*30)
         self.display_message('weather_in_city', city=weather.city.title())
-        print(f"{self.get_text('temp_c')}: {weather.temp_c}°")
+        print(f"{self.get_text('temperature')}: {weather.temp_c}°")
         print(f"{self.get_text('conditions')}: {weather.condition}")
         print(f"{self.get_text('humidity')}: {weather.humidity}%")
         print(f"{self.get_text('wind_speed')}: {weather.wind_kph}km/h")
         print(f"{self.get_text('precipitation')}: {weather.precip_mm}mm")
         print('='*30)
 
-    def display_historical_weather(self, weather: CurrentWeather):
+    def display_historical_weather(self, city_name, weather: HistoricalDay):
         print('\n' + '='*30)
-        self.display_message('historical_weather', city=weather.city.title())
-        print(f"{self.get_text('conditions')}: {weather.temp_c}°")
+        self.display_message('historical_weather', date=weather.date, city=city_name.title())
+        print(f"{self.get_text('max_temp')}: {weather.max_temp}°")
+        print(f"{self.get_text('min_temp')}: {weather.min_temp}°")
         print(f"{self.get_text('conditions')}: {weather.condition}")
-        print(f"{self.get_text('humidity')}: {weather.humidity}%")
-        print(f"{self.get_text('wind_speed')}: {weather.wind_kph}km/h")
-        print(f"{self.get_text('precipitation')}: {weather.precip_mm}mm")
+        print(f"{self.get_text('total_precip')}: {weather.total_precip}mm")
+        print(f"{self.get_text('max_wind_speed')}: {weather.max_wind_speed}km/h")
+        print(f"{self.get_text('avg_humidity')}: {weather.avg_humidity}%")
+        print(f"{self.get_text('sunrise')}: {weather.sunrise}")
+        print(f"{self.get_text('sunset')}: {weather.sunset}")
+        print('='*30)
+
+    def display_feedbacks(self, feedbacks_list):
+        if not feedbacks_list:
+            self.display_message('no_feedbacks')
+            return
+
+        print('\n' + '='*30)
+        self.display_message('feedback_number')
+        for i, feedback in enumerate(feedbacks_list, 1):
+            print(f"--- Feedback #{i} ---{feedback}")
+        print('='*30)
+
+    def display_alerts(self, city_name, alert_items):
+        self.display_message('weather_alerts', city=city_name.title())
+
+        for i, day in enumerate(alert_items, 1):
+            print('\n' + '='*30)
+            print(f"{self.get_text('day')} {i}:")
+            print(f"{self.get_text('alert_title')}: {day.headline}")
+            print(f"{self.get_text('alert_description')}: {day.desc}")
+            print(f"{self.get_text('alert_severity')}: {day.severity}")
+            print(f"{self.get_text('alert_urgency')}: {day.urgency}")
+            print(f"{self.get_text('alert_areas')}: {day.areas}")
+            print('='*30)
+    
+    def display_report(self, report: WeatherReport):
+        print('\n' + '='*30)
+        self.display_message('report_title', city=report.city.title(), date1=report.start_date, date2=report.end_date)
+        
+        print(self.get_text('report_max_temp', max_temp_period=report.period_max_temp))
+        print(self.get_text('report_min_temp', min_temp_period=report.period_min_temp))
+        print(self.get_text('report_total_precip', total_precip=report.total_precip))
+        print(self.get_text('report_rainy_days', num_rainy_days=report.rainy_days))
+        print(self.get_text('report_avg_temp', final_avg_temp=report.avg_temp))
+        print(self.get_text('report_avg_umidity', final_avg_humidity=report.avg_humidity))
         print('='*30)
