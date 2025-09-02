@@ -38,7 +38,7 @@ class Forecast(Feature):
 
             except Exception as e:
                 self.ui.display_message('invalid_input')
-                print(f"Erro inesperado: {e}")
+                self.ui.display_message('unexpected_error', error=str(e))
                 break
 
 class Current(Feature): 
@@ -67,14 +67,13 @@ class Current(Feature):
                     
                     self.ui.display_current_weather(current_weather_obj)
 
-                # Usando uma chave de tradução mais genérica para o submenu
                 another = self.ui.get_user_input('consult_another_city')
                 if another.lower() != 'c':
                     break
 
             except Exception as e:
                 self.ui.display_message('invalid_input')
-                print(f"Erro inesperado: {e}")
+                self.ui.display_message('unexpected_error', error=str(e))
                 break
 
 class History(Feature):
@@ -95,14 +94,13 @@ class History(Feature):
                     
                     self.ui.display_historical_weather(city, historical_obj)
 
-                # Usando uma chave de tradução mais genérica para o submenu
                 another = self.ui.get_user_input('consult_another_city')
                 if another.lower() != 'c':
                     break
 
             except Exception as e:
                 self.ui.display_message('invalid_input')
-                print(f"Erro inesperado: {e}")
+                self.ui.display_message('unexpected_error', error=str(e))
                 break
 
 class Feedback(Feature):
@@ -123,7 +121,7 @@ class Feedback(Feature):
             
             elif option == '2':
                 self.ui.display_feedbacks(self.feedbacks)
-                input("\nPressione Enter para voltar ao menu...") # implementar traducao
+                self.ui.get_user_input('press_enter_to_continue')
                 break
 
             else:
@@ -138,7 +136,7 @@ class Feedback(Feature):
         
         new_feedback = FeedbackModel(condition, location, date, comment)
         self.feedbacks.append(new_feedback)
-        print("\nFeedback adicionado com sucesso!") # implementar traducao
+        self.ui.display_message('sucess_feedback')
 
 MAX_DAYS_FOR_REPORT = 30 
 
@@ -158,7 +156,7 @@ class Alert(Feature):
                 else:
                     self.ui.display_message('no_alerts')
 
-                input("\nPressione Enter para voltar ao menu...")
+                self.ui.get_user_input('press_enter_to_continue') # Apenas para pausar
                 break
 
             except Exception as e:
@@ -215,7 +213,7 @@ class Report(Feature):
                     num_days_with_data += 1
                 
                 current_date += timedelta(days=1)
-
+            
             if num_days_with_data > 0:
                 final_avg_temp = total_avg_temp / num_days_with_data
                 final_avg_humidity = total_avg_umidity / num_days_with_data

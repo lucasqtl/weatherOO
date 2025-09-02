@@ -28,7 +28,7 @@ class UIManager:
         'another_location': '2 - Consultar clima de uma cidade específica',
         'consult_another_city': 'Digite "c" para consultar outra cidade ou "m" para voltar ao menu: ',
         'invalid_input': 'Entrada inválida, retornando ao menu',
-        'weather_in_city': 'Como está o tempo em',
+        'weather_in_city': 'Como está o tempo em {city}',
         'humidity': 'Umidade',
         'wind_speed': 'Velocidade do vento',
         'precipitation': 'Precipitação',
@@ -42,7 +42,7 @@ class UIManager:
         'no_alerts': 'Não existem alertas climáticos para a sua cidade nos próximos 7 dias.',
         'historical_note': 'OBS: Temos dados históricos de até 1 ano atrás',
         'enter_date': 'Digite a data que você quer consultar (formato: yyyy-MM-dd): ',
-        'historical_weather': 'Como estava o tempo no dia',
+        'historical_weather': 'Como estava o tempo no dia {date} em {city}',
         'total_precip': 'Precipitação Total',
         'max_wind_speed': 'Velocidade Máxima do Vento',
         'avg_humidity': 'Umidade média',
@@ -70,7 +70,10 @@ class UIManager:
         'report_avg_temp': 'Média de temperatura no período: {final_avg_temp:.2f}°',
         'report_avg_umidity': 'Média de umidade no período: {final_avg_humidity:.2f}%',
         'report_no_data': 'Não foi possível obter dados para o período e cidade informados.',
-        'report_invalid_date_format': 'Formato de data inválido. Use yyyy-MM-dd.'
+        'report_invalid_date_format': 'Formato de data inválido. Use yyyy-MM-dd.',
+        'press_enter_to_continue': '\nPressione Enter para voltar ao menu...',
+        'sucess_feedback': 'Feedback adicionado com sucesso!',
+        'unexpected_error': 'Erro inesperado: {error}',
     },
     'en': {
         'select_feature': 'Select a feature:',
@@ -98,7 +101,7 @@ class UIManager:
         'another_location': '2 - Check weather for a specific city',
         'consult_another_city': 'Type "c" to consult another city or "m" to return to the menu: ',
         'invalid_input': 'Invalid input, returning to menu',
-        'weather_in_city': 'How is the weather in',
+        'weather_in_city': 'How is the weather in {city}',
         'humidity': 'Humidity',
         'wind_speed': 'Wind Speed',
         'precipitation': 'Precipitation',
@@ -112,7 +115,7 @@ class UIManager:
         'no_alerts': 'There are no weather alerts for your city in the next 7 days.',
         'historical_note': 'Note: We have historical data from up to 1 year ago',
         'enter_date': 'Enter the date you want to check (format: yyyy-MM-dd): ',
-        'historical_weather': 'How was the weather on',
+        'historical_weather': 'How was the weather on {date} in {city}',
         'total_precip': 'Total Precipitation',
         'max_wind_speed': 'Maximum Wind Speed',
         'avg_humidity': 'Average Humidity',
@@ -140,7 +143,10 @@ class UIManager:
         'report_avg_temp': 'Average temperature in the period: {final_avg_temp:.2f}°',
         'report_avg_umidity': 'Average humidity in the period: {final_avg_humidity:.2f}%',
         'report_no_data': 'Could not retrieve data for the specified period and city.',
-        'report_invalid_date_format': 'Invalid date format. Use yyyy-MM-dd.'
+        'report_invalid_date_format': 'Invalid date format. Use yyyy-MM-dd.',
+        'press_enter_to_continue': '\nPress Enter to return to the menu...',
+        'sucess_feedback': 'Feedback added successfully!',
+        'unexpected_error': 'Unexpected error: {error}',
     },
     'es': {
         'select_feature': 'Seleccione una funcionalidad:',
@@ -168,7 +174,7 @@ class UIManager:
         'another_location': '2 - Consultar clima de una ciudad específica',
         'consult_another_city': 'Escriba "c" para consultar otra ciudad o "m" para volver al menú: ',
         'invalid_input': 'Entrada inválida, regresando al menú',
-        'weather_in_city': 'Cómo está el tiempo en',
+        'weather_in_city': 'Cómo está el tiempo en {city}',
         'humidity': 'Humedad',
         'wind_speed': 'Velocidad del viento',
         'precipitation': 'Precipitación',
@@ -182,7 +188,7 @@ class UIManager:
         'no_alerts': 'No hay alertas climáticas para su ciudad en los próximos 7 días.',
         'historical_note': 'Nota: Tenemos datos históricos de hasta 1 año atrás',
         'enter_date': 'Ingrese la fecha que desea consultar (formato: yyyy-MM-dd): ',
-        'historical_weather': 'Cómo estaba el tiempo el',
+        'historical_weather': 'Cómo estaba el tiempo el {date} en {city}',
         'total_precip': 'Precipitación Total',
         'max_wind_speed': 'Velocidad Máxima del Viento',
         'avg_humidity': 'Humedad promedio',
@@ -210,7 +216,10 @@ class UIManager:
         'report_avg_temp': 'Temperatura promedio en el período: {final_avg_temp:.2f}°',
         'report_avg_umidity': 'Humedad promedio en el período: {final_avg_humidity:.2f}%',
         'report_no_data': 'No se pudieron obtener datos para el período y ciudad especificados.',
-        'report_invalid_date_format': 'Formato de fecha inválido. Use yyyy-MM-dd.'
+        'report_invalid_date_format': 'Formato de fecha inválido. Use yyyy-MM-dd.',
+        'press_enter_to_continue': '\nPresione Enter para volver al menú...',
+        'sucess_feedback': '¡Feedback agregado con éxito!',
+        'unexpected_error': 'Error inesperado: {error}'
     }
 }
 
@@ -322,8 +331,12 @@ class UIManager:
     
     def display_report(self, report: WeatherReport):
         print('\n' + '='*30)
-        self.display_message('report_title', city=report.city.title(), date1=report.start_date, date2=report.end_date)
-        
+        self.display_message(
+            'report_title',
+            city=report.city.title(),
+            date1=report.start_date,
+            date2=report.end_date
+        )
         print(self.get_text('report_max_temp', max_temp_period=report.period_max_temp))
         print(self.get_text('report_min_temp', min_temp_period=report.period_min_temp))
         print(self.get_text('report_total_precip', total_precip=report.total_precip))
