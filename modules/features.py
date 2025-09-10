@@ -1,14 +1,16 @@
 from .models import ForecastDay, CurrentWeather, HistoricalDay, AlertWeather, WeatherReport
 from .models import Feedback as FeedbackModel
 from datetime import datetime, timedelta
+from abc import ABC, abstractmethod
 
 MAX_DAYS_FOR_REPORT = 30 
 
-class Feature:
+class Feature(ABC):
     def __init__(self, api_service, ui_manager):
         self.api = api_service
         self.ui = ui_manager
 
+    @abstractmethod
     def execute(self):
         pass
 

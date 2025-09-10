@@ -27,7 +27,7 @@ class WeatherApp:
                 break
             
             if option == '7':
-                new_lang = input('Escolha um Idioma (pt, en, es): ').lower() # fazer um chave pra esse texto
+                new_lang = input('Escolha um Idioma (pt, en, es): ').lower()
                 if not self.ui.set_language(new_lang):
                     self.ui.display_message('invalid_input')
                 continue 
