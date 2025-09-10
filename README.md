@@ -88,7 +88,7 @@ Widgets de Clima Personalizáveis: A personalização de widgets é uma funciona
 Para rodar este projeto, você precisará ter o Python instalado. A chave da API necessária já está incluída no código para facilitar a execução.
 
 
-OBS: A chave de API no código é válida até o dia 07/09/2025. Caso a correção esteja ocorrendo após esse período, recomendo a criação de uma nova chave e a substituição no local indicado abaixo.
+OBS: A chave de API no código é válida até o dia 24/09/2025. Caso a correção esteja ocorrendo após esse período, recomendo a criação de uma nova chave e a substituição no local indicado abaixo.
 
 
 Clone o Repositório:
